@@ -22,4 +22,10 @@ class Repository {
     var connection = await database;
     return await connection.insert(table, data);
   }
+
+  // 從表格讀取資料
+  readData(table) async {
+    var connection = await database;
+    return await connection.query(table);
+  }
 }
