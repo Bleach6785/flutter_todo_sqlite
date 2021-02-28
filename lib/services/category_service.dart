@@ -27,6 +27,11 @@ class CategoryService {
 
   // 更新資料
   updateCategory(Category category) async {
-    return await _repository.updatedata('categories', category.categoryMap());
+    return await _repository.updateData('categories', category.categoryMap());
+  }
+
+  // 使用Id刪除資料
+  deleteCategory(int categoryId) async {
+    return await _repository.deleteData('categories', categoryId);
   }
 }

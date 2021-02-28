@@ -75,7 +75,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 _category.description = _categoryDescriptionController.text;
 
                 var result = await _categoryService.saveCategory(_category);
-                print(result);
+                if (result > 0) {
+                  print(result);
+                  Navigator.pop(context);
+                  getAllCategories(); // 刷新
+                }
               },
               child: Text('Save'),
             ),
@@ -131,7 +135,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 if (result > 0) {
                   Navigator.pop(context);
                   getAllCategories(); // 刷新
-                  _showSuccessSnackBar(Text('Update'));
+                  _showSuccessSnackBar(Text('Updated'));
                 }
               },
               child: Text('Update'),
@@ -158,6 +162,37 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  _deleteFormDialog(BuildContext context, int categoryId) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (param) {
+        return AlertDialog(
+          actions: [
+            FlatButton(
+              color: Colors.green,
+              onPressed: () => Navigator.pop(context),
+              child: Text('Canel'),
+            ),
+            FlatButton(
+              color: Colors.red,
+              onPressed: () async {
+                var result = await _categoryService.deleteCategory(categoryId);
+                if (result > 0) {
+                  Navigator.pop(context);
+                  getAllCategories(); // 刷新
+                  _showSuccessSnackBar(Text('Deleted'));
+                }
+              },
+              child: Text('Delete'),
+            ),
+          ],
+          title: Text('Are you sure you want to delete this?'),
         );
       },
     );
@@ -222,7 +257,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           Icons.delete,
                           color: Colors.red,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          _deleteFormDialog(context, _categoryList[index].id);
+                        },
                       )
                     ],
                   ),

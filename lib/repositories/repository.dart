@@ -36,8 +36,14 @@ class Repository {
   }
 
   // 更新資料
-  updatedata(table, data) async{ 
+  updateData(table, data) async{ 
     var connection = await database;
     return await connection.update(table,data, where:'id=?',whereArgs:[data['id']]);
+  }
+
+  // 使用Id刪除資料
+  deleteData(table, int itemId) async {
+    var connection = await database;
+    return await connection.rawDelete("DELETE FROM $table WHERE id = $itemId");
   }
 }
