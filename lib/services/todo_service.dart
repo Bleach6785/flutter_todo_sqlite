@@ -17,4 +17,9 @@ class TodoService {
   readTodo() async {
     return await _repository.readData('todos');
   }
+
+  // 使用category讀取資料
+  readTodosByCategory(category) async {
+    return await _repository.readDataByColumnName('todos','category',category);
+  }
 }

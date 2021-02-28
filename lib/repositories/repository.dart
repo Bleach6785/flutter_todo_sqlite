@@ -32,18 +32,37 @@ class Repository {
   // 使用Id從表格讀取資料
   readDataById(table, int itemId) async {
     var connection = await database;
-    return await connection.query(table, where: 'id=?', whereArgs: [itemId]);
+    return await connection.query(
+      table,
+      where: 'id=?',
+      whereArgs: [itemId],
+    );
   }
 
   // 更新資料
-  updateData(table, data) async{ 
+  updateData(table, data) async {
     var connection = await database;
-    return await connection.update(table,data, where:'id=?',whereArgs:[data['id']]);
+    return await connection.update(
+      table,
+      data,
+      where: 'id=?',
+      whereArgs: [data['id']],
+    );
   }
 
   // 使用Id刪除資料
   deleteData(table, int itemId) async {
     var connection = await database;
     return await connection.rawDelete("DELETE FROM $table WHERE id = $itemId");
+  }
+
+  // 使用表格欄位名讀取資料
+  readDataByColumnName(table, columnName, columnValue) async {
+    var connection = await database;
+    return await connection.query(
+      table,
+      where: "$columnName=?",
+      whereArgs: [columnValue],
+    );
   }
 }
