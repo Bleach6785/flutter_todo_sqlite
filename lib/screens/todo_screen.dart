@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_sqlite/models/todo.dart';
 import 'package:flutter_todo_sqlite/services/category_service.dart';
+import 'package:flutter_todo_sqlite/services/todo_service.dart';
 import 'package:intl/intl.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class _TodoScreenState extends State<TodoScreen> {
 
   var _selectedValue;
   var _categories = List<DropdownMenuItem>();
+
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -50,9 +54,17 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
+  _showSuccessSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: message,
+    );
+    _globalKey.currentState.showSnackBar(_snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text('Create Todo'),
       ),
@@ -101,7 +113,23 @@ class _TodoScreenState extends State<TodoScreen> {
               height: 20.0,
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () async {
+                var todoObject = Todo();
+
+                todoObject.title = _todoTitleController.text;
+                todoObject.description = _todoDescriptionController.text;
+                todoObject.isFinished = 0;
+                todoObject.category = _selectedValue.toString();
+                todoObject.todoDate = _todoDateController.text;
+
+                var _todoService = TodoService();
+                var result = await _todoService.saveTodo(todoObject);                
+
+                if (result > 0) {
+                  _showSuccessSnackBar(Text('Created'));
+                }
+                print(result);
+              },
               color: Colors.blue,
               child: Text(
                 'Save',
