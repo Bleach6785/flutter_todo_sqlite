@@ -22,6 +22,11 @@ class CategoryService {
 
   // 使用Id從表格讀取資料
   readCategoryById(int categoryId) async {
-    return await _repository.readDataById('categories',categoryId);
+    return await _repository.readDataById('categories', categoryId);
+  }
+
+  // 更新資料
+  updateCategory(Category category) async {
+    return await _repository.updatedata('categories', category.categoryMap());
   }
 }

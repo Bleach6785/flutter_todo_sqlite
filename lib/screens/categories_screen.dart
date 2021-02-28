@@ -27,6 +27,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     getAllCategories();
   }
 
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
   getAllCategories() async {
     _categoryList = List<Category>();
     var categories = await _categoryService.readCategories();
@@ -121,11 +123,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               onPressed: () async {
                 // print('Category: ${_categoryNameController.text}');
                 // print('Description: ${_categoryDescriptionController.text}');
-                _category.name = _categoryNameController.text;
-                _category.description = _categoryDescriptionController.text;
+                _category.id = category[0]['id'];
+                _category.name = _editCategoryNameController.text;
+                _category.description = _editCategoryDescriptionController.text;
 
-                var result = await _categoryService.saveCategory(_category);
-                print(result);
+                var result = await _categoryService.updateCategory(_category);
+                if (result > 0) {
+                  Navigator.pop(context);
+                  getAllCategories(); // 刷新
+                  _showSuccessSnackBar(Text('Update'));
+                }
               },
               child: Text('Update'),
             ),
@@ -156,9 +163,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
+  _showSuccessSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: message,
+    );
+    _globalKey.currentState.showSnackBar(_snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text('Categories'),
         leading: RaisedButton(
