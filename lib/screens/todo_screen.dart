@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_sqlite/services/category_service.dart';
 
 class TodoScreen extends StatefulWidget {
   @override
@@ -11,10 +12,27 @@ class _TodoScreenState extends State<TodoScreen> {
   var todoDateController = TextEditingController();
 
   var _selectedValue;
+  var _categories = List<DropdownMenuItem>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
+
+  _loadCategories() async {
+    var _categoryService = CategoryService();
+    var categories = await _categoryService.readCategories();
+    categories.forEach((category) {
+      _categories.add(DropdownMenuItem(
+        child: Text(category['name']),
+        value: category['name'],
+      ));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var _categories;
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Todo'),
