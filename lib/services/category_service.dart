@@ -19,4 +19,9 @@ class CategoryService {
   readCategories() async {
     return await _repository.readData('categories');
   }
+
+  // 使用Id從表格讀取資料
+  readCategoryById(int categoryId) async {
+    return await _repository.readDataById('categories',categoryId);
+  }
 }

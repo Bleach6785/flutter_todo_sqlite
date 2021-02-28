@@ -28,4 +28,10 @@ class Repository {
     var connection = await database;
     return await connection.query(table);
   }
+
+  // 使用Id從表格讀取資料
+  readDataById(table, int itemId) async {
+    var connection = await database;
+    return await connection.query(table, where: 'id=?', whereArgs: [itemId]);
+  }
 }
